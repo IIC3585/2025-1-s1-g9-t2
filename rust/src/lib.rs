@@ -1,6 +1,6 @@
 use wasm_bindgen::prelude::*;
 use std::io::Cursor;
-use image::{ImageFormat, GenericImageView};
+use image::{ImageFormat, GenericImageView, DynamicImage};
 
 #[wasm_bindgen]
 pub fn resize(image_data: &[u8], width: u32, height: u32) -> Vec<u8> {
@@ -48,5 +48,25 @@ pub fn pixelate(image_data: &[u8], pixel_size: u32) -> Vec<u8> {
 
     let mut buf = Cursor::new(Vec::new());
     pixelated.write_to(&mut buf, ImageFormat::Png).expect("Failed to write image");
+    buf.into_inner()
+}
+
+#[wasm_bindgen]
+pub fn invert(image_data: &[u8]) -> Vec<u8> {
+    let mut image = image::load_from_memory(image_data)
+        .expect("Failed to load image")
+        .to_rgba8();
+
+    for pixel in image.pixels_mut() {
+        pixel.0 = [
+            255 - pixel[0],
+            255 - pixel[1],
+            255 - pixel[2],
+            pixel[3],
+        ];
+    }
+
+    let mut buf = Cursor::new(Vec::new());
+    DynamicImage::ImageRgba8(image).write_to(&mut buf, ImageFormat::Png).expect("Failed to write image");
     buf.into_inner()
 }

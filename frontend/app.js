@@ -1,5 +1,4 @@
-// import init, { resize, grayscale, blur, flip_horizontal, pixelate } from './pkg/img.js';
-import init, { resize, grayscale, blur, flip_horizontal, pixelate } from '../rust/pkg/img.js';
+import init, { resize, grayscale, blur, flip_horizontal, pixelate, invert } from '../rust/pkg/img.js';
 
 async function main() {
     await init(); // Initialize and load the WASM module
@@ -10,7 +9,11 @@ async function main() {
     const blurButton = document.getElementById('blurButton');
     const flipButton = document.getElementById('flipButton');
     const pixelateButton = document.getElementById('pixelateButton');
+    const invertButton = document.getElementById('invertButton');
+    const downloadButton = document.getElementById('downloadButton');
 
+
+    let currentImageData;
 
     fileInput.addEventListener('change', () => {
         const file = fileInput.files[0];
@@ -31,7 +34,7 @@ async function main() {
         if (file) {
             const arrayBuffer = await file.arrayBuffer();
             const resizedImage = resize(new Uint8Array(arrayBuffer), 200, 200);
-            // downloadImage(resizedImage, 'resized_image.png');
+            currentImageData = resizedImage;
             displayImage(resizedImage, 'image/png');
         }
     });
@@ -41,7 +44,7 @@ async function main() {
         if (file) {
             const arrayBuffer = await file.arrayBuffer();
             const grayImage = grayscale(new Uint8Array(arrayBuffer));
-            // downloadImage(grayImage, 'gray_image.png');
+            currentImageData = grayImage;
             displayImage(grayImage, 'image/png');
         }
     });
@@ -51,7 +54,7 @@ async function main() {
         if (file) {
             const arrayBuffer = await file.arrayBuffer();
             const blurredImage = blur(new Uint8Array(arrayBuffer), 5.0);
-            // downloadImage(blurredImage, 'blurred_image.png');
+            currentImageData = blurredImage;
             displayImage(blurredImage, 'image/png');
         }
     });
@@ -61,6 +64,7 @@ async function main() {
         if (file) {
             const arrayBuffer = await file.arrayBuffer();
             const flippedImage = flip_horizontal(new Uint8Array(arrayBuffer));
+            currentImageData = flippedImage;
             displayImage(flippedImage, 'image/png');
         }
     });
@@ -70,6 +74,7 @@ async function main() {
         if (file) {
             const arrayBuffer = await file.arrayBuffer();
             const pixelatedImage = pixelate(new Uint8Array(arrayBuffer), 8);
+            currentImageData = pixelatedImage;
             displayImage(pixelatedImage, 'image/png');
         }
     });
@@ -83,6 +88,22 @@ async function main() {
         link.click();
     }
 
+    invertButton.addEventListener('click', async () => {
+        const file = fileInput.files[0];
+        if (file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const invertedImage = invert(new Uint8Array(arrayBuffer));
+            currentImageData = invertedImage;
+            displayImage(invertedImage);
+        }
+    });
+
+    downloadButton.addEventListener('click', () => {
+        if (currentImageData) {
+            downloadImage(currentImageData, 'processed_image.png');
+        }
+    });
+
     function displayImage(uint8array, mimeType = 'image/png') {
         const blob = new Blob([uint8array], { type: mimeType });
         const imageUrl = URL.createObjectURL(blob);
@@ -90,7 +111,7 @@ async function main() {
         outputImage.src = imageUrl;
         outputImage.style.display = 'block';
     }
-    
+
 }
 
 main();
