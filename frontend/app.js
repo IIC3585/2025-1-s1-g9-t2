@@ -1,13 +1,16 @@
-import init, { resize, grayscale, blur } from './pkg/img.js';
+import init, { resize, grayscale, blur, invert } from './pkg/img.js';
 
 async function main() {
-    await init(); // Initialize and load the WASM module
+    await init(); // Inicializa el módulo WASM
 
     const fileInput = document.getElementById('imageInput');
     const resizeButton = document.getElementById('resizeButton');
     const grayscaleButton = document.getElementById('grayscaleButton');
     const blurButton = document.getElementById('blurButton');
+    const invertButton = document.getElementById('invertButton');
+    const downloadButton = document.getElementById('downloadButton');
 
+    let currentImageData; // Variable para almacenar la imagen procesada
 
     fileInput.addEventListener('change', () => {
         const file = fileInput.files[0];
@@ -15,21 +18,20 @@ async function main() {
             const reader = new FileReader();
             reader.onload = () => {
                 const outputImage = document.getElementById('outputImage');
-                outputImage.src = reader.result; // base64
+                outputImage.src = reader.result;
                 outputImage.style.display = 'block';
             };
             reader.readAsDataURL(file);
         }
     });
-    
-    
+
     resizeButton.addEventListener('click', async () => {
         const file = fileInput.files[0];
         if (file) {
             const arrayBuffer = await file.arrayBuffer();
             const resizedImage = resize(new Uint8Array(arrayBuffer), 200, 200);
-            // downloadImage(resizedImage, 'resized_image.png');
-            displayImage(resizedImage, 'image/png');
+            currentImageData = resizedImage;
+            displayImage(resizedImage);
         }
     });
 
@@ -38,8 +40,8 @@ async function main() {
         if (file) {
             const arrayBuffer = await file.arrayBuffer();
             const grayImage = grayscale(new Uint8Array(arrayBuffer));
-            // downloadImage(grayImage, 'gray_image.png');
-            displayImage(grayImage, 'image/png');
+            currentImageData = grayImage;
+            displayImage(grayImage);
         }
     });
 
@@ -48,10 +50,35 @@ async function main() {
         if (file) {
             const arrayBuffer = await file.arrayBuffer();
             const blurredImage = blur(new Uint8Array(arrayBuffer), 5.0);
-            // downloadImage(blurredImage, 'blurred_image.png');
-            displayImage(blurredImage, 'image/png');
+            currentImageData = blurredImage;
+            displayImage(blurredImage);
         }
     });
+
+    invertButton.addEventListener('click', async () => {
+        const file = fileInput.files[0];
+        if (file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const invertedImage = invert(new Uint8Array(arrayBuffer));
+            currentImageData = invertedImage;
+            displayImage(invertedImage);
+        }
+    });
+
+    downloadButton.addEventListener('click', () => {
+        if (currentImageData) {
+            downloadImage(currentImageData, 'processed_image.png');
+        }
+    });
+
+    function displayImage(uint8array, mimeType = 'image/png') {
+        const blob = new Blob([uint8array], { type: mimeType });
+        const imageUrl = URL.createObjectURL(blob);
+        const outputImage = document.getElementById('outputImage');
+        outputImage.src = imageUrl;
+        outputImage.style.display = 'block';
+        currentImageData = uint8array;
+    }
 
     function downloadImage(imageData, fileName) {
         const blob = new Blob([imageData], { type: 'image/png' });
@@ -61,16 +88,6 @@ async function main() {
         link.download = fileName;
         link.click();
     }
-
-    function displayImage(uint8array, mimeType = 'image/png') {
-        const blob = new Blob([uint8array], { type: mimeType });
-        const imageUrl = URL.createObjectURL(blob);
-    
-        const outputImage = document.getElementById('outputImage');
-        outputImage.src = imageUrl;
-        outputImage.style.display = 'block';
-    }
-    
 }
 
 main();
