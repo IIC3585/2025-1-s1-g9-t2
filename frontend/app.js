@@ -8,13 +8,29 @@ async function main() {
     const grayscaleButton = document.getElementById('grayscaleButton');
     const blurButton = document.getElementById('blurButton');
 
+
+    fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const outputImage = document.getElementById('outputImage');
+                outputImage.src = reader.result; // base64
+                outputImage.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    
     resizeButton.addEventListener('click', async () => {
         const file = fileInput.files[0];
         if (file) {
             const arrayBuffer = await file.arrayBuffer();
             const resizedImage = resize(new Uint8Array(arrayBuffer), 200, 200);
-            downloadImage(resizedImage, 'resized_image.png');
-        } o
+            // downloadImage(resizedImage, 'resized_image.png');
+            displayImage(resizedImage, 'image/png');
+        }
     });
 
     grayscaleButton.addEventListener('click', async () => {
@@ -22,7 +38,8 @@ async function main() {
         if (file) {
             const arrayBuffer = await file.arrayBuffer();
             const grayImage = grayscale(new Uint8Array(arrayBuffer));
-            downloadImage(grayImage, 'gray_image.png');
+            // downloadImage(grayImage, 'gray_image.png');
+            displayImage(grayImage, 'image/png');
         }
     });
 
@@ -31,7 +48,8 @@ async function main() {
         if (file) {
             const arrayBuffer = await file.arrayBuffer();
             const blurredImage = blur(new Uint8Array(arrayBuffer), 5.0);
-            downloadImage(blurredImage, 'blurred_image.png');
+            // downloadImage(blurredImage, 'blurred_image.png');
+            displayImage(blurredImage, 'image/png');
         }
     });
 
@@ -43,6 +61,16 @@ async function main() {
         link.download = fileName;
         link.click();
     }
+
+    function displayImage(uint8array, mimeType = 'image/png') {
+        const blob = new Blob([uint8array], { type: mimeType });
+        const imageUrl = URL.createObjectURL(blob);
+    
+        const outputImage = document.getElementById('outputImage');
+        outputImage.src = imageUrl;
+        outputImage.style.display = 'block';
+    }
+    
 }
 
 main();
