@@ -1,4 +1,5 @@
-import init, { resize, grayscale, blur, invert } from './pkg/img.js';
+
+import init, { resize, grayscale, blur, flip_horizontal, pixelate, invert } from '../rust/pkg/img.js';
 
 async function main() {
     await init(); // Inicializa el módulo WASM
@@ -9,7 +10,9 @@ async function main() {
     const blurButton = document.getElementById('blurButton');
     const invertButton = document.getElementById('invertButton');
     const downloadButton = document.getElementById('downloadButton');
-
+    const flipButton = document.getElementById('flipButton');
+    const pixelateButton = document.getElementById('pixelateButton');
+  
     let currentImageData; // Variable para almacenar la imagen procesada
 
     fileInput.addEventListener('change', () => {
@@ -70,6 +73,33 @@ async function main() {
             downloadImage(currentImageData, 'processed_image.png');
         }
     });
+  
+    flipButton.addEventListener('click', async () => {
+        const file = fileInput.files[0];
+        if (file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const flippedImage = flip_horizontal(new Uint8Array(arrayBuffer));
+            displayImage(flippedImage, 'image/png');
+        }
+    });
+
+    pixelateButton.addEventListener('click', async () => {
+        const file = fileInput.files[0];
+        if (file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const pixelatedImage = pixelate(new Uint8Array(arrayBuffer), 8);
+            displayImage(pixelatedImage, 'image/png');
+        }
+    });
+
+    function downloadImage(imageData, fileName) {
+        const blob = new Blob([imageData], { type: 'image/png' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        link.click();
+    }
 
     function displayImage(uint8array, mimeType = 'image/png') {
         const blob = new Blob([uint8array], { type: mimeType });
