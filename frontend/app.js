@@ -72,7 +72,7 @@ async function main() {
             const pixelatedImage = pixelate(new Uint8Array(arrayBuffer), 8);
             displayImage(pixelatedImage, 'image/png');
         }
-});
+    });
 
     function downloadImage(imageData, fileName) {
         const blob = new Blob([imageData], { type: 'image/png' });
