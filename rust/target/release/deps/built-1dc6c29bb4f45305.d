@@ -1,0 +1,10 @@
+/Users/pedroirarrazaval/Desktop/diseño_apps/2025-1-s1-g9-t2/rust/target/release/deps/libbuilt-1dc6c29bb4f45305.rmeta: /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/lib.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/environment.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/util.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/../README.md
+
+/Users/pedroirarrazaval/Desktop/diseño_apps/2025-1-s1-g9-t2/rust/target/release/deps/libbuilt-1dc6c29bb4f45305.rlib: /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/lib.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/environment.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/util.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/../README.md
+
+/Users/pedroirarrazaval/Desktop/diseño_apps/2025-1-s1-g9-t2/rust/target/release/deps/built-1dc6c29bb4f45305.d: /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/lib.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/environment.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/util.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/../README.md
+
+/Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/lib.rs:
+/Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/environment.rs:
+/Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/util.rs:
+/Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/built-0.7.7/src/../README.md:
