@@ -105,6 +105,12 @@ async function main() {
         link.click();
         URL.revokeObjectURL(url);
     }
+
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.getElementById('splash-screen').style.display = 'none';
+        }, 1000);
+    });
     
 }
 
