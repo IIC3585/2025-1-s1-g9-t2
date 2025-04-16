@@ -111,7 +111,15 @@ async function main() {
             document.getElementById('splash-screen').style.display = 'none';
         }, 1000);
     });
-    
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Service Worker Registered', reg))
+            .catch(err => console.error('Error in SW register', err));
+        });
+    }
+  
 }
 
 main();
