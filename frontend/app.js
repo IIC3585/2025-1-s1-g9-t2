@@ -29,48 +29,18 @@ async function main() {
         }
     });
     
+    const applyFilter = (filterFn) => {
+        if (!currentImageData) return;
+        currentImageData = filterFn(currentImageData);
+        displayImage(currentImageData);
+    };
 
-    buttons.resize.addEventListener('click', () => {
-        if (currentImageData) {
-            currentImageData = resize(currentImageData, 200, 200);
-            displayImage(currentImageData);
-        }
-    });
-
-    buttons.grayscale.addEventListener('click', () => {
-        if (currentImageData) {
-            currentImageData = grayscale(currentImageData);
-            displayImage(currentImageData);
-        }
-    });
-
-    buttons.blur.addEventListener('click', () => {
-        if (currentImageData) {
-            currentImageData = blur(currentImageData, 5.0);
-            displayImage(currentImageData);
-        }
-    });
-
-    buttons.flip.addEventListener('click', () => {
-        if (currentImageData) {
-            currentImageData = flip_horizontal(currentImageData);
-            displayImage(currentImageData);
-        }
-    });
-
-    buttons.pixelate.addEventListener('click', () => {
-        if (currentImageData) {
-            currentImageData = pixelate(currentImageData, 8);
-            displayImage(currentImageData);
-        }
-    });
-
-    buttons.invert.addEventListener('click', () => {
-        if (currentImageData) {
-            currentImageData = invert(currentImageData);
-            displayImage(currentImageData);
-        }
-    });
+    buttons.resize.addEventListener('click', () => applyFilter(data => resize(data, 200, 200)));
+    buttons.grayscale.addEventListener('click', () => applyFilter(grayscale));
+    buttons.blur.addEventListener('click', () => applyFilter(data => blur(data, 5.0)));
+    buttons.flip.addEventListener('click', () => applyFilter(flip_horizontal));
+    buttons.pixelate.addEventListener('click', () => applyFilter(data => pixelate(data, 8)));
+    buttons.invert.addEventListener('click', () => applyFilter(invert));
 
     buttons.reset.addEventListener('click', () => {
         if (originalImageData) {
@@ -78,8 +48,6 @@ async function main() {
             displayImage(currentImageData);
         }
     });
-    
-
 
     buttons.download.addEventListener('click', () => {
         if (currentImageData) {
@@ -113,11 +81,12 @@ async function main() {
     });
 
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js')
+        console.log('Service Worker is supported in this browser');
+        navigator.serviceWorker.register('/sw.js')
             .then(reg => console.log('Service Worker Registered', reg))
             .catch(err => console.error('Error in SW register', err));
-        });
+    } else {
+        console.log('Service Worker not supported in this browser');
     }
   
 }
