@@ -1,4 +1,6 @@
 import init, { resize, grayscale, blur, flip_horizontal, pixelate, invert } from '../rust/pkg/img.js';
+import { requestPermission, setupOnMessageHandler } from './firebase-messaging.js';
+
 
 async function main() {
     await init(); // Carga el módulo WASM
@@ -52,8 +54,19 @@ async function main() {
     buttons.download.addEventListener('click', () => {
         if (currentImageData) {
             downloadImage(currentImageData, 'processed_image.png');
+    
+            // Mostrar notificación si el usuario ha dado permiso
+            if (Notification.permission === 'granted') {
+                new Notification('Descarga iniciada!! ;) ', {
+                    body: 'La imagen procesada se está descargando.',
+                    icon: '/camIcon192.png', // o cualquier ícono de tu app
+                });
+            } else {
+                console.log('Permiso de notificación no otorgado :(');
+            }
         }
     });
+    
 
     function displayImage(imageData, mimeType = 'image/png') {
         const blob = new Blob([imageData], { type: mimeType });
@@ -91,4 +104,6 @@ async function main() {
   
 }
 
+requestPermission();
+setupOnMessageHandler();
 main();

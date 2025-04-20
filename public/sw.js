@@ -7,7 +7,7 @@ self.addEventListener('install', (event) => {
                 await cache.addAll([
                     '/',
                     '/app.js',
-                    'style.css',
+                    '/style.css',
                     '/index.html',
                     '/camIcon192.png',
                     '/camIcon512.png',
@@ -24,9 +24,22 @@ self.addEventListener('install', (event) => {
 });
   
 self.addEventListener('fetch', (event) => {
+    const url = new URL(event.request.url);
+  
+    // Ignora rutas especiales de Vite en modo dev
+    if (
+      url.pathname.startsWith('/@vite') ||
+      url.pathname.startsWith('/@fs') ||
+      url.protocol === 'chrome-extension:' ||
+      url.hostname === 'localhost' // opcional si quieres ignorar todo en dev
+    ) {
+      return;
+    }
+  
     console.log('Service Worker: Fetching', event.request.url);
     event.respondWith(cacheSearch(event));
-});
+  });
+  
 
 async function cacheSearch(event) {
     const cache = await caches.open('static-v1');
