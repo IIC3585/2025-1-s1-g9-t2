@@ -77,6 +77,14 @@ async function main() {
 
     const applyFilter = (name) => {
         if (!currentImageData) return;
+
+        if (name == "reset") {
+            appliedFilters = [];
+            updateImageFilters(currentImageId, []);
+            currentImageData = new Uint8Array(originalImageData);
+            displayImage(currentImageData);
+            return;
+        }
     
         if (appliedFilters.includes(name)) {
             appliedFilters.splice(appliedFilters.indexOf(name), 1);
@@ -116,13 +124,7 @@ async function main() {
     buttons.flip.addEventListener('click', () => applyFilter("flip"));
     buttons.pixelate.addEventListener('click', () => applyFilter("pixelate"));
     buttons.invert.addEventListener('click', () => applyFilter("invert"));
-
-    buttons.reset.addEventListener('click', () => {
-        if (originalImageData) {
-            currentImageData = new Uint8Array(originalImageData); // 👈 esto es una copia, no una referencia
-            displayImage(currentImageData);
-        }
-    });
+    buttons.reset.addEventListener('click', () => applyFilter("reset"));
 
     buttons.download.addEventListener('click', () => {
         if (currentImageData) {
