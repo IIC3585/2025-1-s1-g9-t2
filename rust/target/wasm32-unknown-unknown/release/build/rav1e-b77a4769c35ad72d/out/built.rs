@@ -48,10 +48,10 @@ pub static HOST: &str = "aarch64-apple-darwin";
 pub static PROFILE: &str = "release";
 #[doc=r#"The compiler that cargo resolved to use."#]
 #[allow(dead_code)]
-pub static RUSTC: &str = "/Users/pedroirarrazaval/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc";
+pub static RUSTC: &str = "/Users/pablomaluk/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc";
 #[doc=r#"The documentation generator that cargo resolved to use."#]
 #[allow(dead_code)]
-pub static RUSTDOC: &str = "/Users/pedroirarrazaval/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustdoc";
+pub static RUSTDOC: &str = "/Users/pablomaluk/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustdoc";
 #[doc=r#"Value of OPT_LEVEL for the profile used during compilation."#]
 #[allow(dead_code)]
 pub static OPT_LEVEL: &str = "3";
@@ -73,10 +73,10 @@ pub static FEATURES_LOWERCASE: [&str; 1] = ["threading"];
 #[doc=r#"The feature-string as above, from lowercase strings."#]
 #[allow(dead_code)]
 pub static FEATURES_LOWERCASE_STR: &str = "threading";
-#[doc=r#"The output of `/Users/pedroirarrazaval/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc -V`"#]
+#[doc=r#"The output of `/Users/pablomaluk/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustc -V`"#]
 #[allow(dead_code)]
 pub static RUSTC_VERSION: &str = "rustc 1.86.0 (05f9846f8 2025-03-31)";
-#[doc=r#"The output of `/Users/pedroirarrazaval/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustdoc -V`; empty string if `/Users/pedroirarrazaval/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustdoc -V` failed to execute"#]
+#[doc=r#"The output of `/Users/pablomaluk/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustdoc -V`; empty string if `/Users/pablomaluk/.rustup/toolchains/stable-aarch64-apple-darwin/bin/rustdoc -V` failed to execute"#]
 #[allow(dead_code)]
 pub static RUSTDOC_VERSION: &str = "rustdoc 1.86.0 (05f9846f8 2025-03-31)";
 #[doc=r#"The target architecture, given by `CARGO_CFG_TARGET_ARCH`."#]

@@ -19,6 +19,19 @@
             <h1>Magic Image</h1>
         </div>
         <input type="file" id="imageInput" class="input-file">
+        <!-- Trigger Button -->
+<button id="viewUploadsButton">View Uploads</button>
+
+<!-- Modal -->
+    <div id="uploadsModal" class="modal hidden">
+        <div class="modal-content">
+        <span id="closeUploadsModal" class="close">&times;</span>
+        <h2>Your Uploads</h2>
+        <button id="clearImages" class="btn-clear">Clear Images</button>
+        <div id="uploadsGallery" class="gallery-grid"></div>
+        </div>
+    </div>
+
         <div class="button-group">
             <button id="resizeButton">Resize</button>
             <button id="grayscaleButton">Grayscale</button>
