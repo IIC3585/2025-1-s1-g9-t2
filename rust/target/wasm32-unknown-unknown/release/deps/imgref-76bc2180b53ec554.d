@@ -1,0 +1,10 @@
+/Users/pedroirarrazaval/Desktop/diseño_apps/2025-1-s1-g9-t2/rust/target/wasm32-unknown-unknown/release/deps/libimgref-76bc2180b53ec554.rmeta: /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/lib.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/traits.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/iter.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/ops.rs
+
+/Users/pedroirarrazaval/Desktop/diseño_apps/2025-1-s1-g9-t2/rust/target/wasm32-unknown-unknown/release/deps/libimgref-76bc2180b53ec554.rlib: /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/lib.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/traits.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/iter.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/ops.rs
+
+/Users/pedroirarrazaval/Desktop/diseño_apps/2025-1-s1-g9-t2/rust/target/wasm32-unknown-unknown/release/deps/imgref-76bc2180b53ec554.d: /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/lib.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/traits.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/iter.rs /Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/ops.rs
+
+/Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/lib.rs:
+/Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/traits.rs:
+/Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/iter.rs:
+/Users/pedroirarrazaval/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/imgref-1.11.0/src/ops.rs:

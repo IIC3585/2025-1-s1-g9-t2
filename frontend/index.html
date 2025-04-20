@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="Magic Image - A web app for image processing with ease.">
+    <meta name="theme-color" content="#000000">
+    <title>Magic Image</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="/iconLogo.png">
+    <link rel="apple-touch-icon" href="/camIcon192.png">
+    <meta name="theme-color" content="#0f0f0f">
+</head>
+<body>
+    <div class="container">
+        <div class="title-container">
+            <img id="group_logo" src="/camIcon192.png" alt="App Icon"/>
+            <h1>Magic Image</h1>
+        </div>
+        <input type="file" id="imageInput" class="input-file">
+        <!-- Trigger Button -->
+<button id="viewUploadsButton">View Uploads</button>
+
+<!-- Modal -->
+    <div id="uploadsModal" class="modal hidden">
+        <div class="modal-content">
+        <span id="closeUploadsModal" class="close">&times;</span>
+        <h2>Your Uploads</h2>
+        <button id="clearImages" class="btn-clear">Clear Images</button>
+        <div id="uploadsGallery" class="gallery-grid"></div>
+        </div>
+    </div>
+
+        <div class="button-group">
+            <button id="resizeButton">Resize</button>
+            <button id="grayscaleButton">Grayscale</button>
+            <button id="blurButton">Blur</button>
+            <button id="flipButton">Flip</button>
+            <button id="pixelateButton">8-bit</button>
+            <button id="invertButton">Invert Colors</button>
+            <button id="resetButton">Reset</button>
+            <button id="downloadButton" class="download">Download</button>
+        </div>
+        <div class="image-container">
+            <img id="outputImage" alt="Processed Image" style="display:none;">
+        </div>
+    </div>
+
+    <div id="splash-screen">
+        <img src="/iconLogo.png" alt="App Icon" />
+        <p>Iniciando magia visual...</p>
+    </div>
+    
+    <script src="app.js" type="module"></script>
+</body>
+</html>
