@@ -6,16 +6,15 @@ import {
     saveImageFilters,
     getImageWithFilters,
     updateImageFilters,
-    getAllOriginalImages,
     deleteImageById,
     deleteAllImages,
     isDatabaseEmpty,
+    getAllImagesWithFilters,
   } from './db.js';
 
 
 async function main() {
     await init(); // Carga el módulo WASM
-    await loadUserUploadsGallery();
 
     const fileInput = document.getElementById('imageInput');
     const buttons = {
@@ -43,45 +42,50 @@ async function main() {
             currentImageData = new Uint8Array(arrayBuffer);
             let appliedFilters = [];
             const imageId = await saveOriginalImage(new Blob([originalImageData], { type: file.type }));
-            saveImageFilters(imageId, appliedFilters);
             
             currentImageId = imageId;
+            saveImageFilters(imageId, appliedFilters);
             displayImage(currentImageData);
         }
     });
 
 
-    const applyFilter = (filterFn) => {
-        if (!currentImageData) return;
-    
-        const [resultImage, name] = filterFn(currentImageData);
-    
-        if (appliedFilters.includes(name)) {
-            console.log("Removing filter:", name);
-            appliedFilters.splice(appliedFilters.indexOf(name), 1);
+    const applyFilters = async (imageData = null) => {
+        if (!imageData) {
+            if (!originalImageData) return;
+            console.log(originalImageData);
+            currentImageData = new Uint8Array(originalImageData);
+            console.log(currentImageData);
+            console.log(appliedFilters);
+            for (const name of appliedFilters) {
+                currentImageData = await applyFilterWithName(currentImageData, name)[0];
+                console.log(name, currentImageData);
+            }
+            displayImage(currentImageData);
+            return currentImageData;
+            
         } else {
-            console.log("Adding filter:", name);
-            appliedFilters.push(name);
-        }
-    
-        // Apply the full filter stack *once* after updating list
-        applyFilters();
-        updateImageFilters(currentImageId, appliedFilters);
+            let {image, filters} = imageData;
+            const buffer = await image.image.arrayBuffer(); // 👈 importante
+            imageData = new Uint8Array(buffer);
+            for (const name of filters) {
+                imageData = applyFilterWithName(imageData, name)[0];
+            }
+            return imageData
+        };
     };
 
-    const applyFilters = () => {
-        if (!originalImageData) return;
+    const applyFilter = (name) => {
+        if (!currentImageData) return;
     
-        // Clone original data to start clean
-        currentImageData = new Uint8Array(originalImageData); 
-        console.log(currentImageData);
-    
-        for (const name of appliedFilters) {
-            currentImageData = applyFilterWithName(currentImageData, name)[0];
-            console.log(currentImageData);
-        }
-    
-        displayImage(currentImageData);
+        if (appliedFilters.includes(name)) {
+            appliedFilters.splice(appliedFilters.indexOf(name), 1);
+        } else {
+            appliedFilters.push(name);
+        }    
+        // Apply the full filter stack *once* after updating list
+        updateImageFilters(currentImageId, appliedFilters);
+        applyFilters();
     };
     
 
@@ -106,12 +110,12 @@ async function main() {
     }
 
 
-    buttons.resize.addEventListener('click', () => applyFilter(data => resize(data, 200, 200)));
-    buttons.grayscale.addEventListener('click', () => applyFilter(grayscale));
-    buttons.blur.addEventListener('click', () => applyFilter(data => blur(data, 5.0)));
-    buttons.flip.addEventListener('click', () => applyFilter(flip_horizontal));
-    buttons.pixelate.addEventListener('click', () => applyFilter(data => pixelate(data, 8)));
-    buttons.invert.addEventListener('click', () => applyFilter(invert));
+    buttons.resize.addEventListener('click', () => applyFilter("resize"));
+    buttons.grayscale.addEventListener('click', () => applyFilter("grayscale"));
+    buttons.blur.addEventListener('click', () => applyFilter("blur"));
+    buttons.flip.addEventListener('click', () => applyFilter("flip"));
+    buttons.pixelate.addEventListener('click', () => applyFilter("pixelate"));
+    buttons.invert.addEventListener('click', () => applyFilter("invert"));
 
     buttons.reset.addEventListener('click', () => {
         if (originalImageData) {
@@ -199,12 +203,14 @@ async function main() {
         const uploadsGallery = document.getElementById('uploadsGallery');
         uploadsGallery.innerHTML = '';
     
-        const images = await getAllOriginalImages(); // { id, image, timestamp }
+        const images = await getAllImagesWithFilters(); // { id, image, timestamp }
     
         for (const imgEntry of images) {
-            const { id, image } = imgEntry;
-    
-            const blobUrl = URL.createObjectURL(image);
+            let {filters} = imgEntry;
+            let {id} = imgEntry.image;
+            let image = await applyFilters(imgEntry);
+            const blob = new Blob([image], { type: 'image/png' });
+            const blobUrl = URL.createObjectURL(blob);
     
             const container = document.createElement('div');
             container.className = 'thumbnail flex flex-col items-center';
@@ -219,10 +225,12 @@ async function main() {
             loadBtn.textContent = 'Load';
             loadBtn.className = 'mt-2 bg-blue-500 text-white px-3 py-1 rounded';
             loadBtn.onclick = async () => {
-                const buffer = await image.arrayBuffer();
-                originalImageData = new Uint8Array(buffer);
-                currentImageData = new Uint8Array(buffer);
-                appliedFilters = [];
+                currentImageId = id;
+                console.log("OG", imgEntry.image.image.arrayBuffer());
+                originalImageData = new Uint8Array(await imgEntry.image.image.arrayBuffer());
+                currentImageData = new Uint8Array(image);
+                console.log(currentImageData);
+                appliedFilters = filters;
                 displayImage(currentImageData);
                 setTimeout(() => {
                     uploadsModal.classList.add('hidden');
@@ -234,7 +242,6 @@ async function main() {
             deleteBtn.innerHTML = '🗑️';
             deleteBtn.className = 'absolute top-1 right-1 text-red-500 hover:scale-110 transition';
             deleteBtn.onclick = async () => {
-                console.log(id)
                 await deleteImageById(id);
                 if (currentImageId === id) {
                     fileInput.value = ''; // Esto elimina la selección actual del input file
@@ -244,7 +251,6 @@ async function main() {
                     appliedFilters = [];
                 } 
                 isDatabaseEmpty().then((empty) => {
-                    console.log(empty);
                     if (empty) {uploadsModal.classList.add('hidden');}})
 
                 await loadUserUploadsGallery();
@@ -290,6 +296,8 @@ async function main() {
         li.appendChild(img);
         return li;
       }
+
+    await loadUserUploadsGallery();
   
 }
 

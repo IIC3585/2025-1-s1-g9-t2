@@ -29,13 +29,30 @@ export const dbPromise = openDB('image-editor-db', 1, {
  * @returns {number} id of the new image
  */
 export async function saveOriginalImage(imageBlob) {
-  const db = await dbPromise;
-  const id = await db.add('originalImages', {
-    image: imageBlob,
-    timestamp: Date.now(),
-  });
-  return id;
-}
+    try {
+      const db = await dbPromise;  // Make sure dbPromise resolves properly
+  
+      // Check if db is valid before trying to add the image
+      if (!db) {
+        throw new Error("Failed to open IndexedDB.");
+      }
+  
+      // Adding the image to the 'originalImages' store
+      const id = await db.add('originalImages', {
+        image: imageBlob,
+        timestamp: Date.now(),
+      });
+  
+      // Ensure the ID is returned
+      console.log('Image saved with ID:', id);
+      return id;
+  
+    } catch (error) {
+      console.error("Error in saveOriginalImage:", error);
+      throw error;  // Rethrow so you can catch it later if needed
+    }
+  }
+  
 
 /**
  * Save a list of filters applied to a specific image
@@ -54,11 +71,27 @@ export async function saveImageFilters(imageId, filters = []) {
 /**
  * Get all original uploaded images
  */
-export async function getAllOriginalImages() {
-  const db = await dbPromise;
-  return await db.getAll('originalImages');
-}
-
+export async function getAllImagesWithFilters() {
+    const db = await dbPromise;
+  
+    let images = await db.getAll('originalImages');
+  
+    // Sort images by timestamp in descending order (newest first)
+    images.sort((a, b) => b.timestamp - a.timestamp);
+  
+    const result = await Promise.all(
+      images.map(async (image) => {
+        const filters = await db.getAllFromIndex('imageFilters', 'imageId', image.id);
+        return {
+          image,
+          filters: filters.length > 0 ? filters[0].filters : [],
+        };
+      })
+    );
+  
+    return result;
+  }
+  
 /**
  * Get the filters associated with a specific image
  * @param {number} imageId
@@ -74,20 +107,38 @@ export async function getFiltersByImageId(imageId) {
  * @param {number} filterEntryId
  * @param {Array} filters
  */
-export async function updateImageFilters(filterEntryId, filters) {
-  const db = await dbPromise;
-  const current = await db.get('imageFilters', filterEntryId);
-  if (!current) return null;
-
-  const updated = {
-    ...current,
-    filters,
-    timestamp: Date.now(),
-  };
-
-  await db.put('imageFilters', updated);
-  return updated;
-}
+export async function updateImageFilters(imageId, filters) {
+    try {
+      const db = await dbPromise;  // Ensure dbPromise resolves properly
+      const transaction = db.transaction(['imageFilters'], 'readwrite');
+      const store = transaction.objectStore('imageFilters');
+      
+      // Get all entries from the imageFilters store and filter by imageId
+      const allFilters = await store.getAll();
+      const existingFilterEntry = allFilters.find(entry => entry.imageId === imageId);
+  
+      if (!existingFilterEntry) {
+        // If no filter entry is found for the given imageId, create a new one
+        await store.add({
+          imageId: imageId,
+          filters: filters,
+        });
+        console.log(`Created new filter entry for image ID ${imageId}`);
+      } else {
+        // If filters exist, update them
+        existingFilterEntry.filters = filters;
+        await store.put(existingFilterEntry);
+        console.log(`Filters updated successfully for image ID ${imageId}`);
+        console.log(filters);
+      }
+      
+    } catch (error) {
+      console.error("Error in updateImageFilters:", error);
+      throw error;  // Rethrow so you can catch it later if needed
+    }
+  }
+  
+  
 
 /**
  * Get an image and its applied filters in one object
