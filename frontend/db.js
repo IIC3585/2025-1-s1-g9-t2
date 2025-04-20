@@ -120,4 +120,19 @@ export async function getImageWithFilters(imageId) {
     const arrayBuffer = await blob.arrayBuffer();
     return new Uint8Array(arrayBuffer);
 }
+
+export async function deleteImageById(id) {
+    const db = await dbPromise;
+    const tx = db.transaction('originalImages', 'readwrite');
+    const store = tx.objectStore('originalImages');
+    await store.delete(id);
+    await tx.done;
+}
+
+export async function deleteAllImages() {
+    const db = await dbPromise;
+    const tx = db.transaction('originalImages', 'readwrite');
+    await tx.objectStore('originalImages').clear();
+    await tx.done;
+}
   

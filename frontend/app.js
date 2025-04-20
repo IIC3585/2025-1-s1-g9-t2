@@ -5,12 +5,16 @@ import {
     loadOriginalImage,
     saveImageFilters,
     getImageWithFilters,
-    updateImageFilters
+    updateImageFilters,
+    getAllOriginalImages,
+    deleteImageById,
+    deleteAllImages,
   } from './db.js';
 
 
 async function main() {
     await init(); // Carga el módulo WASM
+    await loadUserUploadsGallery();
 
     const fileInput = document.getElementById('imageInput');
     const buttons = {
@@ -36,7 +40,10 @@ async function main() {
             const arrayBuffer = await file.arrayBuffer();
             originalImageData = new Uint8Array(arrayBuffer);
             currentImageData = new Uint8Array(arrayBuffer);
+            let appliedFilters = [];
             const imageId = await saveOriginalImage(new Blob([originalImageData], { type: file.type }));
+            saveImageFilters(imageId, appliedFilters);
+            
             currentImageId = imageId;
             displayImage(currentImageData);
         }
@@ -93,6 +100,7 @@ async function main() {
     
         // Apply the full filter stack *once* after updating list
         applyFilters();
+        updateImageFilters(currentImageId, appliedFilters);
     };
 
     const applyFilters = () => {
@@ -164,9 +172,14 @@ async function main() {
     
 
     function displayImage(imageData, mimeType = 'image/png') {
+        const outputImage = document.getElementById('outputImage');
+        if (!imageData || imageData.length === 0) {
+            outputImage.style.display = 'none';  // Hide the image if no valid image data
+            outputImage.src = ''; // Optionally clear the src to fully remove the previous image
+            return;
+        }
         const blob = new Blob([imageData], { type: mimeType });
         const url = URL.createObjectURL(blob);
-        const outputImage = document.getElementById('outputImage');
         outputImage.src = url;
         outputImage.style.display = 'block';
     }
@@ -196,6 +209,123 @@ async function main() {
     } else {
         console.log('Service Worker not supported in this browser');
     }
+
+    const viewUploadsButton = document.getElementById('viewUploadsButton');
+    const uploadsModal = document.getElementById('uploadsModal');
+    const closeUploadsModal = document.getElementById('closeUploadsModal');
+
+    viewUploadsButton.addEventListener('click', () => {
+        uploadsModal.classList.remove('hidden');
+        loadUserUploadsGallery(); // Refresh gallery
+    });
+
+    closeUploadsModal.addEventListener('click', () => {
+        uploadsModal.classList.add('hidden');
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === uploadsModal) {
+            uploadsModal.classList.add('hidden');
+        }
+    });
+
+    async function loadUserUploadsGallery() {
+        const uploadsGallery = document.getElementById('uploadsGallery');
+        uploadsGallery.innerHTML = '';
+    
+        const images = await getAllOriginalImages(); // { id, image, timestamp }
+    
+        for (const imgEntry of images) {
+            const { id, image } = imgEntry;
+    
+            const blobUrl = URL.createObjectURL(image);
+    
+            const container = document.createElement('div');
+            container.className = 'thumbnail flex flex-col items-center';
+    
+            const imgElem = document.createElement('img');
+            imgElem.src = blobUrl;
+            imgElem.alt = 'Uploaded image';
+            imgElem.className = 'w-full rounded';
+    
+            // Botón de cargar
+            const loadBtn = document.createElement('button');
+            loadBtn.textContent = 'Load';
+            loadBtn.className = 'mt-2 bg-blue-500 text-white px-3 py-1 rounded';
+            loadBtn.onclick = async () => {
+                const buffer = await image.arrayBuffer();
+                originalImageData = new Uint8Array(buffer);
+                currentImageData = new Uint8Array(buffer);
+                appliedFilters = [];
+                displayImage(currentImageData);
+                setTimeout(() => {
+                    uploadsModal.classList.add('hidden');
+                }, 50);
+            };
+    
+            // Botón de eliminar
+            const deleteBtn = document.createElement('button');
+            deleteBtn.innerHTML = '🗑️';
+            deleteBtn.className = 'absolute top-1 right-1 text-red-500 hover:scale-110 transition';
+            deleteBtn.onclick = async () => {
+                console.log(id)
+                await deleteImageById(id);
+                if (currentImageId === id) {
+                    fileInput.value = ''; // Esto elimina la selección actual del input file
+                    currentImageData = null;
+                    originalImageData = null;
+                    currentImageId = null;
+                    appliedFilters = [];
+                    setTimeout(() => {
+                        uploadsModal.classList.add('hidden');
+                    }, 50);
+                } else {
+                    await loadUserUploadsGallery();
+                }
+                
+                //await loadUserUploadsGallery(); // refrescar galería
+                displayImage(currentImageData);
+            };
+    
+            container.appendChild(deleteBtn);
+            container.appendChild(imgElem);
+            container.appendChild(loadBtn);
+            uploadsGallery.appendChild(container);
+        }
+    }
+    
+
+    const clearImagesBtn = document.getElementById('clearImages');
+
+    clearImagesBtn.onclick = async () => {
+        deleteAllImages();
+        fileInput.value = ''; // Esto elimina la selección actual del input file
+        currentImageData = null;
+        originalImageData = null;
+        currentImageId = null;
+        appliedFilters = [];
+        setTimeout(() => {
+            uploadsModal.classList.add('hidden');
+          }, 50);
+        displayImage(currentImageData);
+    };
+
+    function createImageElement(blob, name = 'Saved Image') {
+        const url = URL.createObjectURL(blob);
+        const li = document.createElement('li');
+        li.className = 'upload-item';
+      
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = name;
+        img.style.maxWidth = '100px';
+        img.style.maxHeight = '100px';
+        img.style.border = '1px solid #ccc';
+        img.style.borderRadius = '8px';
+      
+        li.appendChild(img);
+        return li;
+      }
   
 }
 
