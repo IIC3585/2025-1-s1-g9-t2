@@ -13,6 +13,5 @@
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
-  },
-  "homepage": "https://iic3585.github.io/2025-1-s1-g9-t2/"
+  }
 }
