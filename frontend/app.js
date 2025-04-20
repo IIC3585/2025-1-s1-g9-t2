@@ -43,7 +43,33 @@ async function main() {
         }
     });
 
-    const applyFilter = (filterFn, ...args) => {
+
+    const applyFilters = async (imageData = null) => {
+        if (!imageData) {
+            if (!originalImageData) return;
+            console.log(originalImageData);
+            currentImageData = new Uint8Array(originalImageData);
+            console.log(currentImageData);
+            console.log(appliedFilters);
+            for (const name of appliedFilters) {
+                currentImageData = await applyFilterWithName(currentImageData, name);
+                console.log(name, currentImageData);
+            }
+            displayImage(currentImageData);
+            return currentImageData;
+            
+        } else {
+            let {image, filters} = imageData;
+            const buffer = await image.image.arrayBuffer(); // 👈 importante
+            imageData = new Uint8Array(buffer);
+            for (const name of filters) {
+                imageData = applyFilterWithName(imageData, name);
+            }
+            return imageData
+        };
+    };
+
+    const applyFilter = (name) => {
         if (!currentImageData) return;
         currentImageData = filterFn(currentImageData, ...args);
         displayImage(currentImageData);
