@@ -9,6 +9,7 @@ import {
     getAllOriginalImages,
     deleteImageById,
     deleteAllImages,
+    isDatabaseEmpty,
   } from './db.js';
 
 
@@ -49,41 +50,6 @@ async function main() {
         }
     });
 
-    /*
-    
-    const applyFilter = (filterFn) => {
-        if (!currentImageData) return;
-        let result = filterFn(currentImageData)
-        currentImageData = result[0]
-        let name = result[1];
-        console.log(name);
-        console.log(appliedFilters);
-        if (appliedFilters.includes(name)) {
-            console.log("removing filter");
-            const index = appliedFilters.indexOf(name);
-            if (index !== -1) {
-                appliedFilters.splice(index, 1);
-            }
-            currentImageData = applyFilters()
-        } else {
-            console.log("adding filter");
-            appliedFilters.push(name);
-            displayImage(currentImageData);
-        } 
-    };
-
-    const applyFilters = () => {
-        if (!originalImageData) return;
-        if (!appliedFilters.length) {
-            currentImageData = originalImageData;
-        } else {
-            currentImageData = appliedFilters.reduce(
-                (imageData, filterName) => applyFilterWithName(imageData, filterName),
-                originalImageData
-            );
-        }
-        displayImage(currentImageData);
-    };*/
 
     const applyFilter = (filterFn) => {
         if (!currentImageData) return;
@@ -276,14 +242,12 @@ async function main() {
                     originalImageData = null;
                     currentImageId = null;
                     appliedFilters = [];
-                    setTimeout(() => {
-                        uploadsModal.classList.add('hidden');
-                    }, 50);
-                } else {
-                    await loadUserUploadsGallery();
-                }
-                
-                //await loadUserUploadsGallery(); // refrescar galería
+                } 
+                isDatabaseEmpty().then((empty) => {
+                    console.log(empty);
+                    if (empty) {uploadsModal.classList.add('hidden');}})
+
+                await loadUserUploadsGallery();
                 displayImage(currentImageData);
             };
     

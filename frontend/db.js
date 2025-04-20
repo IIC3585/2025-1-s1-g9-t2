@@ -135,4 +135,10 @@ export async function deleteAllImages() {
     await tx.objectStore('originalImages').clear();
     await tx.done;
 }
+
+export async function isDatabaseEmpty() {
+    const db = await dbPromise;
+    const count = await db.count('originalImages');  // Get the count of records in the store
   
+    return count === 0;  // If count is 0, the database is empty
+  }
