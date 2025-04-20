@@ -58,7 +58,7 @@ async function main() {
             console.log(currentImageData);
             console.log(appliedFilters);
             for (const name of appliedFilters) {
-                currentImageData = await applyFilterWithName(currentImageData, name)[0];
+                currentImageData = await applyFilterWithName(currentImageData, name);
                 console.log(name, currentImageData);
             }
             displayImage(currentImageData);
@@ -69,7 +69,7 @@ async function main() {
             const buffer = await image.image.arrayBuffer(); // 👈 importante
             imageData = new Uint8Array(buffer);
             for (const name of filters) {
-                imageData = applyFilterWithName(imageData, name)[0];
+                imageData = applyFilterWithName(imageData, name);
             }
             return imageData
         };
