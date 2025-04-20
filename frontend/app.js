@@ -10,8 +10,7 @@ import {
     deleteAllImages,
     isDatabaseEmpty,
     getAllImagesWithFilters,
-  } from './db.js';
-
+} from './db.js';
 
 async function main() {
     await init(); // Carga el módulo WASM
@@ -43,66 +42,27 @@ async function main() {
             displayImage(currentImageData);
         }
     });
-    
-    const applyFilter = (filterFn) => {
+
+    const applyFilter = (filterFn, ...args) => {
         if (!currentImageData) return;
-        currentImageData = filterFn(currentImageData);
+        currentImageData = filterFn(currentImageData, ...args);
         displayImage(currentImageData);
     };
 
-    buttons.resize.addEventListener('click', () => applyFilter(data => resize(data, 200, 200)));
+    buttons.resize.addEventListener('click', () => applyFilter(resize, 200, 200));
     buttons.grayscale.addEventListener('click', () => applyFilter(grayscale));
-    buttons.blur.addEventListener('click', () => applyFilter(data => blur(data, 5.0)));
+    buttons.blur.addEventListener('click', () => applyFilter(blur, 5.0));
     buttons.flip.addEventListener('click', () => applyFilter(flip_horizontal));
-    buttons.pixelate.addEventListener('click', () => applyFilter(data => pixelate(data, 8)));
+    buttons.pixelate.addEventListener('click', () => applyFilter(pixelate, 8));
     buttons.invert.addEventListener('click', () => applyFilter(invert));
 
     buttons.reset.addEventListener('click', () => {
         if (originalImageData) {
             currentImageData = new Uint8Array(originalImageData); // 👈 esto es una copia, no una referencia
             displayImage(currentImageData);
-            return;
+            appliedFilters = [];
         }
-    
-        if (appliedFilters.includes(name)) {
-            appliedFilters.splice(appliedFilters.indexOf(name), 1);
-        } else {
-            appliedFilters.push(name);
-        }    
-        // Apply the full filter stack *once* after updating list
-        updateImageFilters(currentImageId, appliedFilters);
-        applyFilters();
-    };
-    
-
-    const applyFilterWithName = (imageData, filterName) => {
-        switch (filterName) {
-            case 'resize':
-                return resize(imageData, 200, 200);
-            case 'grayscale':
-                return grayscale(imageData);
-            case 'blur':
-                return blur(imageData, 5.0);
-            case 'flip':
-                return flip_horizontal(imageData);
-            case 'pixelate':
-                return pixelate(imageData, 8);
-            case 'invert':
-                return invert(imageData);
-            default:
-                console.error(`Unknown filter: ${filterName}`);
-                return imageData;
-        }
-    }
-
-
-    buttons.resize.addEventListener('click', () => applyFilter("resize"));
-    buttons.grayscale.addEventListener('click', () => applyFilter("grayscale"));
-    buttons.blur.addEventListener('click', () => applyFilter("blur"));
-    buttons.flip.addEventListener('click', () => applyFilter("flip"));
-    buttons.pixelate.addEventListener('click', () => applyFilter("pixelate"));
-    buttons.invert.addEventListener('click', () => applyFilter("invert"));
-    buttons.reset.addEventListener('click', () => applyFilter("reset"));
+    });
 
     buttons.download.addEventListener('click', () => {
         if (currentImageData) {
@@ -119,7 +79,6 @@ async function main() {
             }
         }
     });
-    
 
     function displayImage(imageData, mimeType = 'image/png') {
         const outputImage = document.getElementById('outputImage');
@@ -186,8 +145,8 @@ async function main() {
         const images = await getAllImagesWithFilters(); // { id, image, timestamp }
     
         for (const imgEntry of images) {
-            let {filters} = imgEntry;
-            let {id} = imgEntry.image;
+            let { filters } = imgEntry;
+            let { id } = imgEntry.image;
             let image = await applyFilters(imgEntry);
             const blob = new Blob([image], { type: 'image/png' });
             const blobUrl = URL.createObjectURL(blob);
@@ -243,7 +202,6 @@ async function main() {
             uploadsGallery.appendChild(container);
         }
     }
-    
 
     const clearImagesBtn = document.getElementById('clearImages');
 
@@ -256,29 +214,11 @@ async function main() {
         appliedFilters = [];
         setTimeout(() => {
             uploadsModal.classList.add('hidden');
-          }, 50);
+        }, 50);
         displayImage(currentImageData);
     };
 
-    function createImageElement(blob, name = 'Saved Image') {
-        const url = URL.createObjectURL(blob);
-        const li = document.createElement('li');
-        li.className = 'upload-item';
-      
-        const img = document.createElement('img');
-        img.src = url;
-        img.alt = name;
-        img.style.maxWidth = '100px';
-        img.style.maxHeight = '100px';
-        img.style.border = '1px solid #ccc';
-        img.style.borderRadius = '8px';
-      
-        li.appendChild(img);
-        return li;
-      }
-
     await loadUserUploadsGallery();
-  
 }
 
 requestPermission();
