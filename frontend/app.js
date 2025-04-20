@@ -1,5 +1,12 @@
 import init, { resize, grayscale, blur, flip_horizontal, pixelate, invert } from '../rust/pkg/img.js';
 import { requestPermission, setupOnMessageHandler } from './firebase-messaging.js';
+import {
+    saveOriginalImage,
+    loadOriginalImage,
+    saveImageFilters,
+    getImageWithFilters,
+    updateImageFilters
+  } from './db.js';
 
 
 async function main() {
@@ -19,6 +26,8 @@ async function main() {
 
     let currentImageData = null;
     let originalImageData = null;
+    let currentImageId = null;
+    let appliedFilters = [];
 
     // Cargar imagen desde archivo
     fileInput.addEventListener('change', async () => {
@@ -27,15 +36,101 @@ async function main() {
             const arrayBuffer = await file.arrayBuffer();
             originalImageData = new Uint8Array(arrayBuffer);
             currentImageData = new Uint8Array(arrayBuffer);
+            const imageId = await saveOriginalImage(new Blob([originalImageData], { type: file.type }));
+            currentImageId = imageId;
             displayImage(currentImageData);
         }
     });
+
+    /*
     
     const applyFilter = (filterFn) => {
         if (!currentImageData) return;
-        currentImageData = filterFn(currentImageData);
+        let result = filterFn(currentImageData)
+        currentImageData = result[0]
+        let name = result[1];
+        console.log(name);
+        console.log(appliedFilters);
+        if (appliedFilters.includes(name)) {
+            console.log("removing filter");
+            const index = appliedFilters.indexOf(name);
+            if (index !== -1) {
+                appliedFilters.splice(index, 1);
+            }
+            currentImageData = applyFilters()
+        } else {
+            console.log("adding filter");
+            appliedFilters.push(name);
+            displayImage(currentImageData);
+        } 
+    };
+
+    const applyFilters = () => {
+        if (!originalImageData) return;
+        if (!appliedFilters.length) {
+            currentImageData = originalImageData;
+        } else {
+            currentImageData = appliedFilters.reduce(
+                (imageData, filterName) => applyFilterWithName(imageData, filterName),
+                originalImageData
+            );
+        }
+        displayImage(currentImageData);
+    };*/
+
+    const applyFilter = (filterFn) => {
+        if (!currentImageData) return;
+    
+        const [resultImage, name] = filterFn(currentImageData);
+    
+        if (appliedFilters.includes(name)) {
+            console.log("Removing filter:", name);
+            appliedFilters.splice(appliedFilters.indexOf(name), 1);
+        } else {
+            console.log("Adding filter:", name);
+            appliedFilters.push(name);
+        }
+    
+        // Apply the full filter stack *once* after updating list
+        applyFilters();
+    };
+
+    const applyFilters = () => {
+        if (!originalImageData) return;
+    
+        // Clone original data to start clean
+        currentImageData = new Uint8Array(originalImageData); 
+        console.log(currentImageData);
+    
+        for (const name of appliedFilters) {
+            currentImageData = applyFilterWithName(currentImageData, name)[0];
+            console.log(currentImageData);
+        }
+    
         displayImage(currentImageData);
     };
+    
+
+    const applyFilterWithName = (imageData, filterName) => {
+        switch (filterName) {
+            case 'resize':
+                return resize(imageData, 200, 200);
+            case 'grayscale':
+                return grayscale(imageData);
+            case 'blur':
+                return blur(imageData, 5.0);
+            case 'flip':
+                return flip_horizontal(imageData);
+            case 'pixelate':
+                return pixelate(imageData, 8);
+            case 'invert':
+                return invert(imageData);
+            default:
+                console.error(`Unknown filter: ${filterName}`);
+                return imageData;
+        }
+    }
+
 
     buttons.resize.addEventListener('click', () => applyFilter(data => resize(data, 200, 200)));
     buttons.grayscale.addEventListener('click', () => applyFilter(grayscale));
