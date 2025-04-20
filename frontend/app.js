@@ -40,48 +40,26 @@ async function main() {
             const arrayBuffer = await file.arrayBuffer();
             originalImageData = new Uint8Array(arrayBuffer);
             currentImageData = new Uint8Array(arrayBuffer);
-            let appliedFilters = [];
-            const imageId = await saveOriginalImage(new Blob([originalImageData], { type: file.type }));
-            
-            currentImageId = imageId;
-            saveImageFilters(imageId, appliedFilters);
             displayImage(currentImageData);
         }
     });
-
-
-    const applyFilters = async (imageData = null) => {
-        if (!imageData) {
-            if (!originalImageData) return;
-            console.log(originalImageData);
-            currentImageData = new Uint8Array(originalImageData);
-            console.log(currentImageData);
-            console.log(appliedFilters);
-            for (const name of appliedFilters) {
-                currentImageData = await applyFilterWithName(currentImageData, name)[0];
-                console.log(name, currentImageData);
-            }
-            displayImage(currentImageData);
-            return currentImageData;
-            
-        } else {
-            let {image, filters} = imageData;
-            const buffer = await image.image.arrayBuffer(); // 👈 importante
-            imageData = new Uint8Array(buffer);
-            for (const name of filters) {
-                imageData = applyFilterWithName(imageData, name)[0];
-            }
-            return imageData
-        };
+    
+    const applyFilter = (filterFn) => {
+        if (!currentImageData) return;
+        currentImageData = filterFn(currentImageData);
+        displayImage(currentImageData);
     };
 
-    const applyFilter = (name) => {
-        if (!currentImageData) return;
+    buttons.resize.addEventListener('click', () => applyFilter(data => resize(data, 200, 200)));
+    buttons.grayscale.addEventListener('click', () => applyFilter(grayscale));
+    buttons.blur.addEventListener('click', () => applyFilter(data => blur(data, 5.0)));
+    buttons.flip.addEventListener('click', () => applyFilter(flip_horizontal));
+    buttons.pixelate.addEventListener('click', () => applyFilter(data => pixelate(data, 8)));
+    buttons.invert.addEventListener('click', () => applyFilter(invert));
 
-        if (name == "reset") {
-            appliedFilters = [];
-            updateImageFilters(currentImageId, []);
-            currentImageData = new Uint8Array(originalImageData);
+    buttons.reset.addEventListener('click', () => {
+        if (originalImageData) {
+            currentImageData = new Uint8Array(originalImageData); // 👈 esto es una copia, no una referencia
             displayImage(currentImageData);
             return;
         }
