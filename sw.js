@@ -9,13 +9,13 @@ self.addEventListener('install', (event) => {
   
           await cache.addAll([
             // `${base}`,
-            `${base}index.html`,
-            `${base}app.js`,
-            `${base}style.css`,
+            // `${base}index.html`,
+            // `${base}app.js`,
+            // `${base}style.css`,
             // `${base}camIcon192.png`,
             // `${base}camIcon512.png`,
             // `${base}camIcon512sinfondo2.png`,
-            `${base}manifest.json`,
+            // `${base}manifest.json`,
             `${base}iconLogo.png`
           ]);
         } catch (error) {
