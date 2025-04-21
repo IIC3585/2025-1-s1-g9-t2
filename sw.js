@@ -90,3 +90,13 @@ messaging.onBackgroundMessage((payload) => {
     icon: '/2025-1-s1-g9-t2/iconLogo.png', // o cualquier ícono que tengas
   });
 });
+
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SHOW_NOTIFICATION') {
+      self.registration.showNotification(event.data.title, {
+        body: event.data.body,
+        icon: event.data.icon,
+      });
+    }
+});
+  
