@@ -12,9 +12,9 @@ self.addEventListener('install', (event) => {
             `${base}index.html`,
             `${base}app.js`,
             `${base}style.css`,
-            `${base}camIcon192.png`,
-            `${base}camIcon512.png`,
-            `${base}camIcon512sinfondo2.png`,
+            // `${base}camIcon192.png`,
+            // `${base}camIcon512.png`,
+            // `${base}camIcon512sinfondo2.png`,
             `${base}manifest.json`,
             `${base}iconLogo.png`
           ]);
