@@ -92,6 +92,7 @@ messaging.onBackgroundMessage((payload) => {
 });
 
 self.addEventListener('message', (event) => {
+    console.log('Service Worker: Received message');
     if (event.data && event.data.type === 'SHOW_NOTIFICATION') {
       self.registration.showNotification(event.data.title, {
         body: event.data.body,
