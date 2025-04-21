@@ -1,26 +1,30 @@
 self.addEventListener('install', (event) => {
     event.waitUntil(
-        (async () => {
-            try {
-                const cache = await caches.open('static-v1');
-                console.log('Service Worker: Caching Files');
-                await cache.addAll([
-                    '/',
-                    '/app.js',
-                    '/style.css',
-                    '/index.html',
-                    '/camIcon192.png',
-                    '/camIcon512.png',
-                    '/camIcon512sinfondo2.png',
-                    '/manifest.json',
-                    '/iconLogo.png'
-                ]);
-            } catch (error) {
-                console.error('Error caching files:', error);
-            }
-        })()
+      (async () => {
+        try {
+          const cache = await caches.open('static-v1');
+          console.log('Service Worker: Caching Files');
+  
+          const base = self.location.pathname.replace(/sw\.js$/, '');
+  
+          await cache.addAll([
+            `${base}`,
+            `${base}index.html`,
+            `${base}app.js`,
+            `${base}style.css`,
+            `${base}camIcon192.png`,
+            `${base}camIcon512.png`,
+            `${base}camIcon512sinfondo2.png`,
+            `${base}manifest.json`,
+            `${base}iconLogo.png`
+          ]);
+        } catch (error) {
+          console.error('Error caching files:', error);
+        }
+      })()
     );
-});
+  });
+  
   
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
