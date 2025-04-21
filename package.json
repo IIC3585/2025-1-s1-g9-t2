@@ -5,7 +5,8 @@
   },
   "type": "module",
   "dependencies": {
-    "firebase": "^11.6.0"
+    "firebase": "^11.6.0",
+    "wasm-pack": "^0.13.1"
   },
   "scripts": {
     "dev": "vite",

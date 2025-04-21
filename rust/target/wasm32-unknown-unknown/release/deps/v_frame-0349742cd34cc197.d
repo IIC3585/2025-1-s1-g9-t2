@@ -1,0 +1,11 @@
+/home/stomicicp/2025-1-s1-g9-t2/rust/target/wasm32-unknown-unknown/release/deps/libv_frame-0349742cd34cc197.rmeta: /home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/lib.rs /home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/frame.rs /home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/math.rs /home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/pixel.rs /home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/plane.rs
+
+/home/stomicicp/2025-1-s1-g9-t2/rust/target/wasm32-unknown-unknown/release/deps/libv_frame-0349742cd34cc197.rlib: /home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/lib.rs /home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/frame.rs /home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/math.rs /home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/pixel.rs /home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/plane.rs
+
+/home/stomicicp/2025-1-s1-g9-t2/rust/target/wasm32-unknown-unknown/release/deps/v_frame-0349742cd34cc197.d: /home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/lib.rs /home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/frame.rs /home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/math.rs /home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/pixel.rs /home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/plane.rs
+
+/home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/lib.rs:
+/home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/frame.rs:
+/home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/math.rs:
+/home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/pixel.rs:
+/home/stomicicp/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/v_frame-0.3.8/src/plane.rs:

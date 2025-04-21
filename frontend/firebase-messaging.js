@@ -16,14 +16,19 @@ const messaging = getMessaging(app);
 
 export async function requestPermission() {
   try {
+    const registration = await navigator.serviceWorker.register('/2025-1-s1-g9-t2/sw.js');
+
     const token = await getToken(messaging, {
-      vapidKey: "BK5dG7X9LrsGL2toqXYmZ2gaGc_V78EnHog8ZiggCB3gzL2iIguzVouD1coi_24mJQT1HHfIcXCWsZ3iEqIf6JY", // lo sacas de Cloud Messaging en Firebase console
+      vapidKey: "BK5dG7X9LrsGL2toqXYmZ2gaGc_V78EnHog8ZiggCB3gzL2iIguzVouD1coi_24mJQT1HHfIcXCWsZ3iEqIf6JY",
+      serviceWorkerRegistration: registration,
     });
+
     console.log("Token de cliente:", token);
   } catch (err) {
     console.error("No se pudo obtener token:", err);
   }
 }
+
 
 export function setupOnMessageHandler() {
   onMessage(messaging, (payload) => {
@@ -32,7 +37,7 @@ export function setupOnMessageHandler() {
     if (Notification.permission === "granted") {
       new Notification(payload.notification.title, {
         body: payload.notification.body,
-        icon: "/iconLogo.png",
+        icon: "/2025-1-s1-g9-t2/iconLogo.png",
       });
     }
   });

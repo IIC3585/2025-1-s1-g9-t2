@@ -129,19 +129,28 @@ async function main() {
     buttons.invert.addEventListener('click', () => applyFilter("invert"));
     buttons.reset.addEventListener('click', () => applyFilter("reset"));
 
+
+    if ('serviceWorker' in navigator) {
+        console.log('Service Worker is supported in this browser');
+        navigator.serviceWorker.register('/2025-1-s1-g9-t2/sw.js')
+            .then(reg => console.log('Service Worker Registered', reg))
+            .catch(err => console.error('Error in SW register', err));
+    } else {
+        console.log('Service Worker not supported in this browser');
+    }
+
     buttons.download.addEventListener('click', () => {
         if (currentImageData) {
             downloadImage(currentImageData, 'processed_image.png');
-    
-            // Mostrar notificación si el usuario ha dado permiso
-            if (Notification.permission === 'granted') {
-                new Notification('Descarga iniciada!! ;) ', {
+            console.log('Service Worker activo');
+            navigator.serviceWorker.ready.then(swReg => {
+                swReg.active.postMessage({
+                    type: 'SHOW_NOTIFICATION',
+                    title: 'Descarga iniciada!!!',
                     body: 'La imagen procesada se está descargando.',
-                    icon: '/camIcon192.png', // o cualquier ícono de tu app
+                    icon: '/2025-1-s1-g9-t2/camIcon192.png'
                 });
-            } else {
-                console.log('Permiso de notificación no otorgado :(');
-            }
+            });
         }
     });
     
@@ -175,15 +184,6 @@ async function main() {
             document.getElementById('splash-screen').style.display = 'none';
         }, 1000);
     });
-
-    if ('serviceWorker' in navigator) {
-        console.log('Service Worker is supported in this browser');
-        navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('Service Worker Registered', reg))
-            .catch(err => console.error('Error in SW register', err));
-    } else {
-        console.log('Service Worker not supported in this browser');
-    }
 
     const viewUploadsButton = document.getElementById('viewUploadsButton');
     const uploadsModal = document.getElementById('uploadsModal');
