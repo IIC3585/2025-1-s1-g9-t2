@@ -18,6 +18,6 @@ messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] Mensaje en background:', payload);
   self.registration.showNotification(payload.notification.title, {
     body: payload.notification.body,
-    icon: '/iconLogo.png', // o cualquier ícono que tengas
+    icon: './iconLogo.png', // o cualquier ícono que tengas
   });
 });
