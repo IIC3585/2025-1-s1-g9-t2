@@ -5,7 +5,7 @@ self.addEventListener('install', (event) => {
           const cache = await caches.open('static-v1');
           console.log('Service Worker: Caching Files');
   
-          const base = self.location.pathname.replace(/sw\.js$/, '');
+          const base = '/2025-1-s1-g9-t2/';
   
           await cache.addAll([
             `${base}`,
