@@ -5,15 +5,15 @@ self.addEventListener('install', (event) => {
                 const cache = await caches.open('static-v1');
                 console.log('Service Worker: Caching Files');
                 await cache.addAll([
-                    '/2025-1-s1-g9-t2/',
-                    '/2025-1-s1-g9-t2/app.js',
-                    '/2025-1-s1-g9-t2/style.css',
-                    '/2025-1-s1-g9-t2/index.html',
-                    '/2025-1-s1-g9-t2/camIcon192.png',
-                    '/2025-1-s1-g9-t2/camIcon512.png',
-                    '/2025-1-s1-g9-t2/camIcon512sinfondo2.png',
-                    '/2025-1-s1-g9-t2/manifest.json',
-                    '/2025-1-s1-g9-t2/iconLogo.png'
+                    '/',
+                    '/app.js',
+                    '/style.css',
+                    '/index.html',
+                    '/camIcon192.png',
+                    '/camIcon512.png',
+                    '/camIcon512sinfondo2.png',
+                    '/manifest.json',
+                    '/iconLogo.png'
                 ]);
             } catch (error) {
                 console.error('Error caching files:', error);
