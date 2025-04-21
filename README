@@ -1,0 +1,52 @@
+# Mi Aplicación Web Progresiva con Rust y WebAssembly
+
+Esta es una aplicación frontend que utiliza **Rust** compilado a **WebAssembly (WASM)** y se integra con **Vite** como herramienta de desarrollo y bundling. Implementa service workers para un funcionamiento offline de mayor velocidad usando cache junto con el uso de notificaciones tanto locales como con el uso de eventos de firebase
+
+
+### Aplicación desplegada en Github Pages
+
+https://iic3585.github.io/2025-1-s1-g9-t2/
+
+
+
+## Requisitos
+
+Asegúrate de tener instalados los siguientes paquetes:
+
+- [Rust]
+- [`wasm-pack`]
+- [Node.js] y `npm`
+- [Vite]
+
+---
+
+## Pasos para compilar y correr el proyecto
+
+### 1. Compilar el paquete de Rust
+
+Ve a la carpeta del código en Rust y ejecuta:
+
+```bash
+cd rust
+wasm-pack build --target web
+```
+
+### 2. Instalar paquetes npm (Carpeta raíz)
+
+```
+npm install
+```
+
+### 3. Instalar dependencias de Vite (carpeta raíz)
+```
+npm install -D vite
+```
+
+## Para ejecutar el sistema con localhost:5173
+
+```
+npx vite
+```
+
+
+
