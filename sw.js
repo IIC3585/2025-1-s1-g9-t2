@@ -8,15 +8,15 @@ self.addEventListener('install', (event) => {
           const base = '/2025-1-s1-g9-t2/';
   
           await cache.addAll([
-            `${base}`,
+            // `${base}`,
             // `${base}index.html`,
             // `${base}app.js`,
             // `${base}style.css`,
-            // // `${base}camIcon192.png`,
-            // // `${base}camIcon512.png`,
-            // // `${base}camIcon512sinfondo2.png`,
+            // `${base}camIcon192.png`,
+            // `${base}camIcon512.png`,
+            // `${base}camIcon512sinfondo2.png`,
             // `${base}manifest.json`,
-            // `${base}iconLogo.png`
+            `${base}iconLogo.png`
           ]);
         } catch (error) {
           console.error('Error caching files:', error);
